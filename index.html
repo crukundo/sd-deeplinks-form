@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>hello</title>
+</head>
+<body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var productionRoot = "https://secure.givelively.org/donate/"
+      var stagingRoot = "http://smart-donations-staging.herokuapp.com/donate/"
+
+      var slugValue = "PLEASE_REPLACE_ME_WITH_A_REAL_SLUG"
+      var amountOverride, recurringOverride;
+
+      var inputFields = document.querySelectorAll(".input-fields input")
+
+      function refreshLinks() {
+        productionLink = productionRoot + slugValue + '?'
+        stagingLink = stagingRoot + slugValue + '?'
+        if ( amountOverride ) {
+          productionLink = productionLink + 'override_amount=' + amountOverride + '&'
+          stagingLink = stagingLink + 'override_amount=' + amountOverride + '&'
+        }
+        if ( recurringOverride ) {
+          productionLink = productionLink + 'recurring=' + recurringOverride + '&'
+          stagingLink = stagingLink + 'recurring=' + recurringOverride + '&'
+        }
+        document.querySelector( '#production-link' ).href = productionLink
+        document.querySelector( '#production-link h2' ).innerHTML = productionLink
+        document.querySelector( '#staging-link' ).href = stagingLink
+        document.querySelector( '#staging-link h2' ).innerHTML = stagingLink
+      }
+
+      for ( var i = 0; i < inputFields.length; i++) {
+        inputFields[ i ].addEventListener( "change", function( event ) {
+          switch(event.target.id) {
+            case "nonprofit-slug":
+              slugValue = event.target.value
+              break;
+            case "amount-override":
+              amountOverride = event.target.value
+              break;
+            case "recurring-override":
+              if ( event.target.checked ) {
+                recurringOverride = true;
+              } else {
+                recurringOverride = false;
+              }
+              break;
+          }
+          refreshLinks()
+        })
+      }
+      
+    })
+  </script>
+
+  <h4>
+    This form allows GL affiliates to internally create deep linked Smart Donations pages    
+  </h4>
+
+  <div class="input-fields">
+    <p>Nonprofit Slug:</p>
+    <small>if this is a campaign page, input the npo and campaign slug seperated by a /. ex: npo-slug/campaign-slug</small>
+    <br>
+    <input type="text" id="nonprofit-slug">
+    <br>
+    <p>Amount Override:</p>
+    <input type="text" id="amount-override">
+    <br>
+    <p>Recurring:</p>
+    <input type="checkbox" id="recurring-override">
+    <br>
+    <br>
+    <br>
+    <a id="production-link" href="#" target="_blank">
+      <h2>
+        edit the fields above to get a production deep link
+      </h2>
+    </a>
+    <a id="staging-link" href="#" target="_blank">
+      <h2>
+        edit the fields above to get a staging deep link
+      </h2>
+    </a>
+  </div>
+</body>
+</html>
